@@ -1,3 +1,5 @@
+require("dotenv").config();
+
 // hey.jsのmodule.exportsを呼び出します。
 const heyFile = require("./commands/hey.js");
 const imasuFile = require("./commands/imasu.js");
@@ -15,7 +17,10 @@ const {
 } = require("discord.js");
 
 // 環境変数としてapplicationId, guildId, tokenの3つが必要です
-const { applicationId, guildId, token } = require("./config.json");
+// const { applicationId, guildId, token } = require("./config.json");
+const applicationId = process.env.APPLICATION_Id;
+const guildId = process.env.GUILD_ID;
+const token = process.env.TOKEN;
 
 // クライアントインスタンスと呼ばれるオブジェクトを作成します
 const client = new Client({ intents: [GatewayIntentBits.Guilds] });
@@ -49,18 +54,16 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
   // heyコマンドに対する処理
   try {
-    
     commands.map((commandFile) => {
       if (interaction.commandName === commandFile.data.name) {
         runCommand(commandFile, interaction);
       }
     });
   } catch {
-     console.error(
-       `${interaction.commandName}というコマンドには対応していません。`
-     );
+    console.error(
+      `${interaction.commandName}というコマンドには対応していません。`
+    );
   }
-
 });
 
 // ログインします
